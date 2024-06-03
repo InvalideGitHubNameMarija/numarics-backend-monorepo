@@ -12,12 +12,7 @@ spring:
           uri: ${service.user.host}
           predicates:
             - Path=/api/v1/users/login, /api/v1/users/register, /user-service/v3/api-docs/**, /user-service/swagger-ui/**
-        - id: product-service
-          uri: ${service.product.host}
-          predicates:
-            - Path=/hello/**
-          filters:
-            - JwtAuthentication=
+
   main:
     web-application-type: reactive
 
@@ -43,4 +38,7 @@ service:
     host: lb://user-service
   product:
     host: lb://product-service
+  order:
+    host: lb://order-service
+
 
