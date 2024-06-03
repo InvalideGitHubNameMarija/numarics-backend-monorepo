@@ -2,11 +2,13 @@ package com.numarics.service.impl;
 
 import com.numarics.dto.LoginDTO;
 import com.numarics.dto.RegisterUserDTO;
+import com.numarics.model.CustomUserDetails;
 import com.numarics.model.Role;
 import com.numarics.model.UserEntity;
 import com.numarics.resource.UserRepository;
 import com.numarics.service.UserService;
 import com.numarics.util.JwtUtil;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
@@ -25,17 +27,17 @@ public class DefaultUserService implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private JwtUserDetailService userDetailsService;
 
     @Override
-    public UserEntity registerUser(RegisterUserDTO userDTO) {
+    public UserEntity registerUser(RegisterUserDTO userDTO, Optional<Role> role) {
         validateUsernameUnique(userDTO.getEmail());
+        Role userRole = role.orElse(Role.USER);
         var user = UserEntity.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
-                .role(Role.USER)
+                .role(userRole)
                 .build();
         return userRepository.save(user);
     }
@@ -45,9 +47,14 @@ public class DefaultUserService implements UserService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getEmail(),
                 loginDTO.getPassword()));
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getEmail());
-        return (passwordEncoder.matches(loginDTO.getPassword(), userDetails.getPassword())) ?
-                jwtUtil.generateToken(userDetails) : null;
+
+        return userRepository.findByEmail(loginDTO.getEmail())
+                .filter(userEntity -> passwordEncoder.matches(loginDTO.getPassword(), userEntity.getPassword()))
+                .map(userEntity -> {
+                    CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+                    return jwtUtil.generateToken(customUserDetails);
+                })
+                .orElse(null);
     }
 
     private void validateUsernameUnique(String email) {

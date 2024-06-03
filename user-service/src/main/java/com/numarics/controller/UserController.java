@@ -19,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = REGISTER_RESPONSE_400_DESCRIPTION)
     })
     public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody final RegisterUserDTO registerUserDTO) {
-        UserEntity registeredUser = userService.registerUser(registerUserDTO);
+        UserEntity registeredUser = userService.registerUser(registerUserDTO, Optional.empty());
         return ResponseEntity.status(HttpStatus.CREATED).body(modelMapper.map(registeredUser, UserDTO.class));
     }
 
