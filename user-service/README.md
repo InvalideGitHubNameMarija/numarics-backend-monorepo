@@ -11,6 +11,6 @@ Setting up this application locally involves following these steps:
 ## Swagger
 To access Swagger documentation, you can use the following URL:
 
-- OpenAPI Specification: `http://localhost:9200/v3/api-docs`
+- OpenAPI Specification: `http://localhost:9200/user-service/v3/api-docs`
 
-- Access Swagger UI: `http://localhost:9200/swagger-ui/index.html`
+- Access Swagger UI: `http://localhost:9200/user-service/swagger-ui/index.html`

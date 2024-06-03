@@ -22,8 +22,9 @@ public class WebSecurityConfig {
 
     private static final String REGISTER_ENDPOINT = "/api/v1/users/register";
     private static final String LOGIN_ENDPOINT = "/api/v1/users/login";
-    private static final String V3_ENDPOINTS = "/v3/api-docs/**";
-    private static final String SWAGGER_ENDPOINTS = "/swagger-ui/**";
+    private static final String V3_ENDPOINTS = "/user-service/v3/api-docs/**";
+    private static final String SWAGGER_ENDPOINTS = "/user-service/swagger-ui/**";
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
