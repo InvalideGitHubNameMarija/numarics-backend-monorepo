@@ -1,0 +1,46 @@
+# Spring Cloud Gateway Configuration
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: ${service.user.host}
+          predicates:
+            - Path=/api/v1/users/login, /api/v1/users/register, /user-service/v3/api-docs/**, /user-service/swagger-ui/**
+        - id: product-service
+          uri: ${service.product.host}
+          predicates:
+            - Path=/hello/**
+          filters:
+            - JwtAuthentication=
+  main:
+    web-application-type: reactive
+
+# JWT Secret Configuration
+jwt:
+  secret: 613639344c77317a4f486130747664353565373637753641554656654f76624d
+
+# Server Configuration
+server:
+  port: 9100
+  url: http://localhost:9100
+
+# Eureka Client Configuration
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+# Service Configuration
+service:
+  user:
+    host: lb://user-service
+  product:
+    host: lb://product-service
+

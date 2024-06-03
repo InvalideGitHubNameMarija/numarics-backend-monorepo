@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -22,8 +24,9 @@ public class WebSecurityConfig {
 
     private static final String REGISTER_ENDPOINT = "/api/v1/users/register";
     private static final String LOGIN_ENDPOINT = "/api/v1/users/login";
-    private static final String V3_ENDPOINTS = "/v3/api-docs/**";
-    private static final String SWAGGER_ENDPOINTS = "/swagger-ui/**";
+    private static final String V3_ENDPOINTS = "/user-service/v3/api-docs/**";
+    private static final String SWAGGER_ENDPOINTS = "/user-service/swagger-ui/**";
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
