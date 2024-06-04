@@ -1,6 +1,6 @@
 package com.numarics.dto;
 
-import com.numarics.model.Role;
+import com.numarics.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

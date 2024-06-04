@@ -1,4 +1,4 @@
-package com.numarics.model;
+package com.numarics.enums;
 
 
 public enum Role {

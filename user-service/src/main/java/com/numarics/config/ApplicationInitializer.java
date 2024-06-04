@@ -1,7 +1,7 @@
 package com.numarics.config;
 
 import com.numarics.dto.RegisterUserDTO;
-import com.numarics.model.Role;
+import com.numarics.enums.Role;
 import com.numarics.service.UserService;
 import jakarta.annotation.PostConstruct;
 import java.util.Optional;

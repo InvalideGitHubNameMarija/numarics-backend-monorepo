@@ -1,7 +1,7 @@
 package com.numarics.service.impl;
 
 import com.numarics.model.CustomUserDetails;
-import com.numarics.resource.UserRepository;
+import com.numarics.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
