@@ -1,15 +1,24 @@
 package com.numarics.util;
 
-public interface ApiDocumentation {
-    String USERS_TAG = "Users";
+public class ApiDocumentation {
+    public static final String USERS_TAG = "Users";
+    public static final String TOKEN_PARAM = "token";
 
-    String REGISTER_OPERATION_SUMMARY = "Register new user";
-    String REGISTER_OPERATION_DESCRIPTION = "This endpoint allows for registering a new user by providing user details.";
-    String REGISTER_RESPONSE_201_DESCRIPTION = "User successfully registered";
-    String REGISTER_RESPONSE_400_DESCRIPTION = "Validation error occurred during registration";
+    public static final String REGISTER_OPERATION_SUMMARY = "Register new user";
+    public static final String REGISTER_OPERATION_DESCRIPTION =
+            "This endpoint allows for registering a new user by providing user details.";
+    public static final String REGISTER_RESPONSE_201_DESCRIPTION = "User successfully registered";
+    public static final String REGISTER_RESPONSE_400_DESCRIPTION = "Validation error occurred during registration";
 
-    String LOGIN_OPERATION_SUMMARY = "Login user";
-    String LOGIN_OPERATION_DESCRIPTION = "This endpoint allows users to log in by providing their credentials. Upon successful authentication, a token is returned.";
-    String LOGIN_RESPONSE_200_DESCRIPTION = "User successfully authenticated and token returned";
-    String LOGIN_RESPONSE_401_DESCRIPTION = "Invalid credentials provided";
+    public static final String LOGIN_OPERATION_SUMMARY = "Login user";
+    public static final String LOGIN_OPERATION_DESCRIPTION =
+            "This endpoint allows users to log in by providing their credentials. Upon successful authentication, a token is returned.";
+    public static final String LOGIN_RESPONSE_200_DESCRIPTION = "User successfully authenticated and token returned";
+    public static final String LOGIN_RESPONSE_401_DESCRIPTION = "Invalid credentials provided";
+
+    public static final String VALIDATE_TOKEN_OPERATION_SUMMARY = "Validate user token";
+    public static final String VALIDATE_TOKEN_OPERATION_DESCRIPTION =
+            "This endpoint validates the provided JWT token and returns user information if the token is valid.";
+    public static final String VALIDATE_TOKEN_RESPONSE_200_DESCRIPTION = "Token is valid, user information returned";
+    public static final String VALIDATE_TOKEN_RESPONSE_401_DESCRIPTION = "Token is not valid";
 }

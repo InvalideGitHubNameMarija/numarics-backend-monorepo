@@ -11,4 +11,6 @@ public interface UserService {
     UserEntity registerUser(RegisterUserDTO userDTO, Optional<Role> role);
 
     String loginUser(LoginDTO loginDTO);
+
+     UserEntity validateToken(String token);
 }

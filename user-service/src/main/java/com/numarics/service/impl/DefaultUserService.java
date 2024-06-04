@@ -12,9 +12,12 @@ import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +26,14 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DefaultUserService implements UserService {
 
+    private static final String AUTHORIZATION_HEADER = HttpHeaders.AUTHORIZATION;
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final JwtUserDetailService jwtUserDetailService;
 
     @Override
     public UserEntity registerUser(RegisterUserDTO userDTO, Optional<Role> role) {
@@ -55,6 +62,20 @@ public class DefaultUserService implements UserService {
                     return jwtUtil.generateToken(customUserDetails);
                 })
                 .orElse(null);
+    }
+
+    @Override
+    public UserEntity validateToken(String token) {
+        String username = jwtUtil.extractUsername(token);
+        UserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
+
+        if (!jwtUtil.isTokenValid(token, userDetails)) {
+            throw new RuntimeException("Token is not valid");
+        }
+
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Username: " + username + " not found in the database!"));
     }
 
     private void validateUsernameUnique(String email) {
