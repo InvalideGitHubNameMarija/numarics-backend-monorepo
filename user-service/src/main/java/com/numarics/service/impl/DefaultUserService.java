@@ -2,17 +2,22 @@ package com.numarics.service.impl;
 
 import com.numarics.dto.LoginDTO;
 import com.numarics.dto.RegisterUserDTO;
+import com.numarics.model.CustomUserDetails;
 import com.numarics.model.Role;
 import com.numarics.model.UserEntity;
 import com.numarics.resource.UserRepository;
 import com.numarics.service.UserService;
 import com.numarics.util.JwtUtil;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.var;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,21 +26,25 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DefaultUserService implements UserService {
 
+    private static final String AUTHORIZATION_HEADER = HttpHeaders.AUTHORIZATION;
+    private static final String BEARER_PREFIX = "Bearer ";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private JwtUserDetailService userDetailsService;
+    private final JwtUserDetailService jwtUserDetailService;
 
     @Override
-    public UserEntity registerUser(RegisterUserDTO userDTO) {
+    public UserEntity registerUser(RegisterUserDTO userDTO, Optional<Role> role) {
         validateUsernameUnique(userDTO.getEmail());
+        Role userRole = role.orElse(Role.USER);
         var user = UserEntity.builder()
                 .firstName(userDTO.getFirstName())
                 .lastName(userDTO.getLastName())
                 .email(userDTO.getEmail())
                 .password(passwordEncoder.encode(userDTO.getPassword()))
-                .role(Role.USER)
+                .role(userRole)
                 .build();
         return userRepository.save(user);
     }
@@ -45,9 +54,28 @@ public class DefaultUserService implements UserService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getEmail(),
                 loginDTO.getPassword()));
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getEmail());
-        return (passwordEncoder.matches(loginDTO.getPassword(), userDetails.getPassword())) ?
-                jwtUtil.generateToken(userDetails) : null;
+
+        return userRepository.findByEmail(loginDTO.getEmail())
+                .filter(userEntity -> passwordEncoder.matches(loginDTO.getPassword(), userEntity.getPassword()))
+                .map(userEntity -> {
+                    CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+                    return jwtUtil.generateToken(customUserDetails);
+                })
+                .orElse(null);
+    }
+
+    @Override
+    public UserEntity validateToken(String token) {
+        String username = jwtUtil.extractUsername(token);
+        UserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
+
+        if (!jwtUtil.isTokenValid(token, userDetails)) {
+            throw new RuntimeException("Token is not valid");
+        }
+
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(
+                        "Username: " + username + " not found in the database!"));
     }
 
     private void validateUsernameUnique(String email) {

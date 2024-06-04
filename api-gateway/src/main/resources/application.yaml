@@ -11,7 +11,14 @@ spring:
         - id: user-service
           uri: ${service.user.host}
           predicates:
-            - Path=/api/v1/users/login, /api/v1/users/register, /user-service/v3/api-docs/**, /user-service/swagger-ui/**
+            - Path=/api/v1/users/login, /api/v1/users/register, /api/v1/users/auth/validate, /user-service/v3/api-docs/**, /user-service/swagger-ui/**
+        - id: product-service
+          uri: ${service.product.host}
+          predicates:
+            - Path=/api/v1/products/create
+          filters:
+            - JwtAuthentication=
+
 
   main:
     web-application-type: reactive

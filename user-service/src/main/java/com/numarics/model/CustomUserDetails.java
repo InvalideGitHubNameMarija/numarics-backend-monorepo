@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final transient UserEntity user;
+    public final transient UserEntity user;
 
     public CustomUserDetails(UserEntity user) {
         this.user = user;
@@ -19,6 +19,10 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Stream.of(new SimpleGrantedAuthority(user.getRole().name()))
                 .collect(Collectors.toList());
+    }
+
+    public UserEntity getUser() {
+        return user;
     }
 
     @Override

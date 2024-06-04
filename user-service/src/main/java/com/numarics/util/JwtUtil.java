@@ -1,5 +1,6 @@
 package com.numarics.util;
 
+import com.numarics.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -38,13 +39,16 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(CustomUserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getUser().getRole());
+        claims.put("userId", userDetails.getUser().getId());
+        return generateToken(claims, userDetails);
     }
 
     public String generateToken(
             Map<String, Object> claims,
-            UserDetails userDetails) {
+            CustomUserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
