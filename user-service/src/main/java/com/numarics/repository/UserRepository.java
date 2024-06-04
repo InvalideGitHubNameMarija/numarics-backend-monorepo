@@ -1,4 +1,4 @@
-package com.numarics.resource;
+package com.numarics.repository;
 
 import com.numarics.model.UserEntity;
 import java.util.Optional;

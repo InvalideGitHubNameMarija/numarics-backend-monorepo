@@ -1,6 +1,6 @@
 package com.numarics.model;
 
-import com.numarics.enums.Role;
+import com.numarics.enums.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -9,11 +9,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,26 +24,26 @@ import lombok.Setter;
 @Setter
 @Builder
 @Entity
-@Table(name = "users")
-public class UserEntity {
-
+@Table(name = "products")
+public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "firstname", nullable = false)
-    private String firstName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(name = "lastname", nullable = false)
-    private String lastName;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
-    @Column(name = "role", nullable = false)
+    @Column(name = "category")
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Category category;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 }
