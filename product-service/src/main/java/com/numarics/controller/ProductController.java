@@ -1,26 +1,6 @@
 package com.numarics.controller;
 
-import static com.numarics.util.ApiDocumentation.CREATE_PRODUCT_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.CREATE_PRODUCT_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.CREATE_PRODUCT_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.CREATE_PRODUCT_RESPONSE_400_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.DELETE_PRODUCT_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.DELETE_PRODUCT_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.DELETE_PRODUCT_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.GET_PRODUCT_BY_ID_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.GET_PRODUCT_BY_ID_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.GET_PRODUCT_BY_ID_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.PRODUCTS_TAG;
-import static com.numarics.util.ApiDocumentation.PRODUCT_ID_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.RESPONSE_401_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.RESPONSE_403_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.RESPONSE_404_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.SEARCH_PRODUCTS_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.SEARCH_PRODUCTS_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.SEARCH_PRODUCTS_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.UPDATE_PRODUCT_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.UPDATE_PRODUCT_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.UPDATE_PRODUCT_RESPONSE_200_DESCRIPTION;
+import static com.numarics.util.ProductApiDocumentation.*;
 
 import com.numarics.dto.ProductDTO;
 import com.numarics.model.ProductEntity;
@@ -55,10 +35,10 @@ public class ProductController {
             description = CREATE_PRODUCT_OPERATION_DESCRIPTION,
             tags = {PRODUCTS_TAG})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = CREATE_PRODUCT_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "400", description = CREATE_PRODUCT_RESPONSE_400_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = RESPONSE_401_DESCRIPTION),
-            @ApiResponse(responseCode = "403", description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_200, description = CREATE_PRODUCT_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_400, description = CREATE_PRODUCT_RESPONSE_400_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_403, description = RESPONSE_403_DESCRIPTION),
     })
     public ResponseEntity<ProductEntity> createProduct(@Valid @RequestBody ProductDTO productDTO) {
         ProductEntity createdProduct = productService.createProduct(productDTO);
@@ -70,10 +50,10 @@ public class ProductController {
             description = GET_PRODUCT_BY_ID_OPERATION_DESCRIPTION,
             tags = {PRODUCTS_TAG})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = GET_PRODUCT_BY_ID_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "404", description = RESPONSE_404_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = RESPONSE_401_DESCRIPTION),
-            @ApiResponse(responseCode = "403", description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_200, description = GET_PRODUCT_BY_ID_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_403, description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_404, description = RESPONSE_404_DESCRIPTION),
     })
     public ResponseEntity<ProductEntity> getProductById(@Parameter(description = PRODUCT_ID_DESCRIPTION) @PathVariable Long id) {
         ProductEntity product = productService.getProductById(id);
@@ -84,17 +64,17 @@ public class ProductController {
             description = SEARCH_PRODUCTS_OPERATION_DESCRIPTION,
             tags = {PRODUCTS_TAG})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = SEARCH_PRODUCTS_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = RESPONSE_401_DESCRIPTION),
-            @ApiResponse(responseCode = "403", description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_200, description = SEARCH_PRODUCTS_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_403, description = RESPONSE_403_DESCRIPTION),
     })
     @GetMapping("/search")
     public ResponseEntity<Page<ProductEntity>> searchProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) String category,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = PAGE_DEFAULT) int page,
+            @RequestParam(defaultValue = SIZE_DEFAULT) int size) {
         Page<ProductEntity> products = productService.searchProducts(name, description, category, page, size);
         return ResponseEntity.ok(products);
     }
@@ -104,10 +84,10 @@ public class ProductController {
             description = UPDATE_PRODUCT_OPERATION_DESCRIPTION,
             tags = {PRODUCTS_TAG})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = UPDATE_PRODUCT_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "404", description = RESPONSE_404_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = RESPONSE_401_DESCRIPTION),
-            @ApiResponse(responseCode = "403", description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_200, description = UPDATE_PRODUCT_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_403, description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_404, description = RESPONSE_404_DESCRIPTION),
     })
     public ResponseEntity<ProductEntity> updateProduct(
             @Parameter(description = PRODUCT_ID_DESCRIPTION) @PathVariable Long id,
@@ -121,10 +101,10 @@ public class ProductController {
             description = DELETE_PRODUCT_OPERATION_DESCRIPTION,
             tags = {PRODUCTS_TAG})
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = DELETE_PRODUCT_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "404", description = RESPONSE_404_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = RESPONSE_401_DESCRIPTION),
-            @ApiResponse(responseCode = "403", description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_204, description = DELETE_PRODUCT_RESPONSE_204_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_403, description = RESPONSE_403_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_404, description = RESPONSE_404_DESCRIPTION),
     })
     public ResponseEntity<Void> deleteProduct(
             @Parameter(description = PRODUCT_ID_DESCRIPTION) @PathVariable Long id) {

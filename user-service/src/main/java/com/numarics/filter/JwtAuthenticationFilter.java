@@ -1,4 +1,4 @@
-package com.numarics.config;
+package com.numarics.filter;
 
 import com.numarics.service.impl.JwtUserDetailService;
 import com.numarics.util.JwtUtil;

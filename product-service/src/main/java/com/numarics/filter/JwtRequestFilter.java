@@ -1,7 +1,8 @@
-package com.numarics.config;
+package com.numarics.filter;
 
 import com.numarics.client.UserServiceClient;
-import com.numarics.dto.UserInfoDTO;
+import com.numarics.client.dto.UserInfoDTO;
+import com.numarics.exception.ServiceUnavailableException;
 import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -62,6 +63,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (FeignException e) {
             if (e.status() == HttpStatus.UNAUTHORIZED.value()) {
                 throw new RuntimeException("Unauthorized: Invalid token");
+            }
+            if (e.status() == HttpStatus.SERVICE_UNAVAILABLE.value()) {
+                throw new ServiceUnavailableException("Service unavailable: Unable to reach user service");
             }
         } catch (Exception e) {
             throw new RuntimeException("Internal server error");

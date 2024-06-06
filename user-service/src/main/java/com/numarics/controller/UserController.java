@@ -1,19 +1,6 @@
 package com.numarics.controller;
 
-import static com.numarics.util.ApiDocumentation.LOGIN_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.LOGIN_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.LOGIN_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.LOGIN_RESPONSE_401_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.REGISTER_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.REGISTER_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.REGISTER_RESPONSE_201_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.REGISTER_RESPONSE_400_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.TOKEN_PARAM;
-import static com.numarics.util.ApiDocumentation.USERS_TAG;
-import static com.numarics.util.ApiDocumentation.VALIDATE_TOKEN_OPERATION_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.VALIDATE_TOKEN_OPERATION_SUMMARY;
-import static com.numarics.util.ApiDocumentation.VALIDATE_TOKEN_RESPONSE_200_DESCRIPTION;
-import static com.numarics.util.ApiDocumentation.VALIDATE_TOKEN_RESPONSE_401_DESCRIPTION;
+import static com.numarics.util.UserApiDocumentation.*;
 
 import com.numarics.dto.LoginDTO;
 import com.numarics.dto.RegisterUserDTO;
@@ -50,8 +37,8 @@ public class UserController {
             description = REGISTER_OPERATION_DESCRIPTION,
             tags = USERS_TAG)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = REGISTER_RESPONSE_201_DESCRIPTION),
-            @ApiResponse(responseCode = "400", description = REGISTER_RESPONSE_400_DESCRIPTION)
+            @ApiResponse(responseCode = STATUS_201, description = REGISTER_RESPONSE_201_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_400, description = REGISTER_RESPONSE_400_DESCRIPTION)
     })
     public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody final RegisterUserDTO registerUserDTO) {
         UserEntity registeredUser = userService.registerUser(registerUserDTO, Optional.empty());
@@ -63,8 +50,8 @@ public class UserController {
             description = LOGIN_OPERATION_DESCRIPTION,
             tags = USERS_TAG)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = LOGIN_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = LOGIN_RESPONSE_401_DESCRIPTION)
+            @ApiResponse(responseCode = STATUS_200, description = LOGIN_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION)
     })
     public ResponseEntity<String> createAuthenticationToken(@Valid @RequestBody final LoginDTO user) {
         return ResponseEntity.ok(userService.loginUser(user));
@@ -75,8 +62,8 @@ public class UserController {
             description = VALIDATE_TOKEN_OPERATION_DESCRIPTION,
             tags = USERS_TAG)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = VALIDATE_TOKEN_RESPONSE_200_DESCRIPTION),
-            @ApiResponse(responseCode = "401", description = VALIDATE_TOKEN_RESPONSE_401_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_200, description = VALIDATE_TOKEN_RESPONSE_200_DESCRIPTION),
+            @ApiResponse(responseCode = STATUS_401, description = RESPONSE_401_DESCRIPTION),
     })
     public ResponseEntity<UserInfoDTO> validateToken(@RequestParam(TOKEN_PARAM) String token) {
         UserEntity validatedUser = userService.validateToken(token);

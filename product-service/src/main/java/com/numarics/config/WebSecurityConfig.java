@@ -1,6 +1,7 @@
 package com.numarics.config;
 
 import com.numarics.enums.Role;
+import com.numarics.filter.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
