@@ -18,6 +18,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Default implementation of {@link UserService} interface.
+ */
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -40,6 +43,7 @@ public class DefaultUserService implements UserService {
                 .password(passwordEncoder.encode(userDTO.getPassword()))
                 .role(userRole)
                 .build();
+        log.info("Registering new user: {}", user.getEmail());
         return userRepository.save(user);
     }
 
@@ -53,9 +57,14 @@ public class DefaultUserService implements UserService {
                 .filter(userEntity -> passwordEncoder.matches(loginDTO.getPassword(), userEntity.getPassword()))
                 .map(userEntity -> {
                     CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
-                    return jwtUtil.generateToken(customUserDetails);
+                    String token = jwtUtil.generateToken(customUserDetails);
+                    log.info("User {} logged in successfully", loginDTO.getEmail());
+                    return token;
                 })
-                .orElse(null);
+                .orElseGet(() -> {
+                    log.warn("Login attempt failed for user: {}", loginDTO.getEmail());
+                    return null;
+                });
     }
 
     @Override
@@ -64,6 +73,7 @@ public class DefaultUserService implements UserService {
         UserDetails userDetails = jwtUserDetailService.loadUserByUsername(username);
 
         if (!jwtUtil.isTokenValid(token, userDetails)) {
+            log.error("Token {} is not valid", token);
             throw new RuntimeException("Token is not valid");
         }
 

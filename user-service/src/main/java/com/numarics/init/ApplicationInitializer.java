@@ -1,4 +1,4 @@
-package com.numarics.config;
+package com.numarics.init;
 
 import com.numarics.dto.RegisterUserDTO;
 import com.numarics.enums.Role;
