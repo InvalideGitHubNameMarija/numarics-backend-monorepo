@@ -13,3 +13,13 @@ This monorepo contains several modules:
 5. [API Gateway](api-gateway/README.md): Serves as a centralized entry point for client requests. It routes requests to the appropriate microservice
 
 ![Architecture Diagram](Diagram.png)
+
+## Getting Started
+
+To start this project, follow these steps:
+
+1. Start the Eureka Registry Server
+2. Start the API Gateway
+3. Start the microservices
+
+For more detailed instructions, open the individual README files in each module linked at the top of the page.
