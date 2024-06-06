@@ -13,7 +13,6 @@ The service will start up on port 9200 by default.
 
 ## Technologies Used
 
-
 - **Spring Security:** Ensures secure authentication and authorization within the application.
 - **H2 Database:** Provides an in-memory database solution for development and testing purposes.
 - **ModelMapper:** Facilitates mapping between entity and DTO objects.
@@ -23,6 +22,8 @@ The service will start up on port 9200 by default.
 - **JSON Web Token (JWT):** Enables secure communication by generating and validating tokens.
 - **Lombok:** Simplifies Java code by providing annotations to reduce boilerplate code.
 
+## Logging
+The User Service uses SLF4J for logging, providing detailed information about service operations.
 
 ## Swagger
 To access Swagger documentation, you can use the following URL:

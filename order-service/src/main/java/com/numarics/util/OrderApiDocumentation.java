@@ -42,7 +42,7 @@ public class OrderApiDocumentation {
     public static final String DELETE_ORDER_RESPONSE_204_DESCRIPTION = "Order successfully deleted";
     public static final String DELETE_ORDER_RESPONSE_404_DESCRIPTION = "Order not found";
 
-    public static final String RESPONSE_404_DESCRIPTION = "Order not found with the provided ID.";
     public static final String RESPONSE_401_DESCRIPTION = "Unauthorized: User not authenticated";
     public static final String RESPONSE_403_DESCRIPTION = "Forbidden: User does not have permission";
+    public static final String RESPONSE_404_DESCRIPTION = "Order not found with the provided ID.";
 }

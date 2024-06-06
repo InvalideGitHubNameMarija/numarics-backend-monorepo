@@ -1,9 +1,11 @@
 package com.numarics.exception.handler;
 
 import com.numarics.exception.ErrorResponse;
+import com.numarics.exception.ServiceUnavailableException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,6 +42,26 @@ public class ExceptionRestResponseErrorHandler {
     public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException e) {
         HttpStatus status = HttpStatus.NOT_FOUND;
         log.error("NotFoundException: {}", e.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(status, e.getMessage());
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleServiceUnavailableException(NotFoundException e) {
+        HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+        log.error("ServiceUnavailableException: {}", e.getMessage());
+
+        ErrorResponse errorResponse = new ErrorResponse(status, e.getMessage());
+        return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        log.error("HttpMessageNotReadableException: {}", e.getMessage());
 
         ErrorResponse errorResponse = new ErrorResponse(status, e.getMessage());
         return new ResponseEntity<>(errorResponse, status);
