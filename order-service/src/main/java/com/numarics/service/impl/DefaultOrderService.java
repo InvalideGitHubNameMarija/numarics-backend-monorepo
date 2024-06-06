@@ -19,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+/**
+ * Default implementation of {@link OrderService} interface.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,7 @@ public class DefaultOrderService implements OrderService {
 
     @Override
     public OrderEntity createOrder(OrderDTO orderDTO, String userId) {
+        log.info("Creating order for user {} with order details: {}", userId, orderDTO);
         Long id = validateUserId(userId);
         validateProductIds(orderDTO.getProductIds());
 
@@ -36,22 +40,27 @@ public class DefaultOrderService implements OrderService {
                 .userId(id)
                 .productIds(orderDTO.getProductIds())
                 .build();
-        return orderRepository.save(order);
+        OrderEntity createdOrder = orderRepository.save(order);
+        log.info("Order created successfully with ID: {}", createdOrder.getId());
+        return createdOrder;
     }
 
     @Override
     public Optional<OrderEntity> getOrderById(Long id) {
+        log.info("Fetching order by ID: {}", id);
         return orderRepository.findById(id);
     }
 
     @Override
     public Page<OrderEntity> getAllOrders(int page, int size) {
+        log.info("Fetching all orders with pagination - Page: {}, Size: {}", page, size);
         Pageable pageable = PageRequest.of(page, size);
         return orderRepository.findAll(pageable);
     }
 
     @Override
     public OrderEntity updateOrder(Long id, OrderDTO orderDTO) {
+        log.info("Updating order with ID: {} with new details: {}", id, orderDTO);
         validateIfOrderExists(id);
 
         Optional<OrderEntity> optionalOrder = getOrderById(id);
@@ -60,8 +69,10 @@ public class DefaultOrderService implements OrderService {
             if (isOrderDataChanged(order, orderDTO)) {
                 validateProductIds(orderDTO.getProductIds());
                 order.setProductIds(orderDTO.getProductIds());
+                log.info("Order updated successfully with ID: {}", id);
                 return orderRepository.save(order);
             }
+            log.info("No changes detected for order with ID: {}", id);
             return order;
         }
         return null;
@@ -69,18 +80,22 @@ public class DefaultOrderService implements OrderService {
 
     @Override
     public void deleteOrder(Long id) {
+        log.info("Deleting order with ID: {}", id);
         validateIfOrderExists(id);
         orderRepository.deleteById(id);
+        log.info("Order deleted successfully with ID: {}", id);
     }
 
     @Override
     public Page<OrderEntity> getOrdersByUserId(Long userId, int page, int size) {
+        log.info("Fetching orders for user with ID: {} with pagination - Page: {}, Size: {}", userId, page, size);
         Pageable pageable = PageRequest.of(page, size);
         return orderRepository.findByUserId(userId, pageable);
     }
 
     public void validateIfOrderExists(Long id) {
         if (!orderRepository.existsById(id)) {
+            log.error("Order not found with ID: {}", id);
             throw new NotFoundException("Order not found with id: " + id);
         }
     }

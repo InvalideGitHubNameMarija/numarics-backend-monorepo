@@ -1,7 +1,7 @@
 package com.numarics.filter;
 
 import com.numarics.client.UserServiceClient;
-import com.numarics.dto.UserInfoDTO;
+import com.numarics.client.dto.UserInfoDTO;
 import com.numarics.exception.ServiceUnavailableException;
 import feign.FeignException;
 import jakarta.servlet.FilterChain;

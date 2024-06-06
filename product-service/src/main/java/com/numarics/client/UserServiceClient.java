@@ -1,6 +1,6 @@
 package com.numarics.client;
 
-import com.numarics.dto.UserInfoDTO;
+import com.numarics.client.dto.UserInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

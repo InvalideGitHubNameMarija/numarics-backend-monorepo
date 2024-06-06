@@ -19,6 +19,7 @@ The service will start up on port 9200 by default.
 - **Spring Boot Starter Validation:** Provides support for declarative validation constraints.
 - **Spring Boot Starter Web:** Provides basic web support including RESTful APIs.
 - **Spring Boot Starter Data JPA:** Simplifies the implementation of JPA-based data access layers.
+- **Spring Cloud Starter Netflix Eureka Client:** Facilitates service registration and discovery in a distributed system.- 
 - **JSON Web Token (JWT):** Enables secure communication by generating and validating tokens.
 - **Lombok:** Simplifies Java code by providing annotations to reduce boilerplate code.
 
