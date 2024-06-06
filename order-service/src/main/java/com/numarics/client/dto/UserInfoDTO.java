@@ -1,4 +1,4 @@
-package com.numarics.dto;
+package com.numarics.client.dto;
 
 import com.numarics.enums.Role;
 import lombok.AllArgsConstructor;

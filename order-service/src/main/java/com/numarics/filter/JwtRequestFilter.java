@@ -1,7 +1,8 @@
-package com.numarics.config;
+package com.numarics.filter;
 
 import com.numarics.client.UserServiceClient;
-import com.numarics.dto.UserInfoDTO;
+import com.numarics.client.dto.UserInfoDTO;
+import com.numarics.exception.ServiceUnavailableException;
 import feign.FeignException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -38,7 +39,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException,
+            IOException {
         final String requestAuthHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         final String jwt;
@@ -47,25 +49,30 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             return;
         }
         jwt = requestAuthHeader.substring(BEARER_PREFIX.length());
-
         try {
             UserInfoDTO userInfo = userServiceClient.validateToken(jwt).getBody();
             if (Objects.nonNull(userInfo)) {
-                UserDetails userDetails = new User(String.valueOf(userInfo.getId()), "",
+                UserDetails userDetails = new User(
+                        String.valueOf(userInfo.getId()),
+                        "",
                         Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userInfo.getRole())));
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(
-                        request));
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, jwt, userDetails.getAuthorities());
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         } catch (FeignException e) {
             if (e.status() == HttpStatus.UNAUTHORIZED.value()) {
                 throw new RuntimeException("Unauthorized: Invalid token");
             }
+            if (e.status() == HttpStatus.SERVICE_UNAVAILABLE.value()) {
+                throw new ServiceUnavailableException("Service unavailable: Unable to reach user service");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Internal server error");
         }
+
         filterChain.doFilter(request, response);
     }
 }
