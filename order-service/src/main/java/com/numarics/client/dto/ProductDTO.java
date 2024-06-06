@@ -1,6 +1,5 @@
-package com.numarics.dto;
+package com.numarics.client.dto;
 
-import com.numarics.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoDTO {
+public class ProductDTO {
 
     private Long id;
-    private Role role;
 }

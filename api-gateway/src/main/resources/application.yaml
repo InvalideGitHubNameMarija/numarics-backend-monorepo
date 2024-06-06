@@ -15,10 +15,23 @@ spring:
         - id: product-service
           uri: ${service.product.host}
           predicates:
-            - Path=/api/v1/products/**, /product-service/v3/api-docs/**, /product-service/swagger-ui/**
+            - Path=/api/v1/products/**
           filters:
             - JwtAuthentication=
-
+        - id: product-service-docs
+          uri: ${service.product.host}
+          predicates:
+            - Path=/product-service/v3/api-docs/**, /product-service/swagger-ui/**
+        - id: order-service
+          uri: ${service.order.host}
+          predicates:
+            - Path=/api/v1/orders/**
+          filters:
+            - JwtAuthentication=
+        - id: order-service-docs
+          uri: ${service.order.host}
+          predicates:
+            - Path=/order-service/v3/api-docs/**, /order-service/swagger-ui/**
   main:
     web-application-type: reactive
 
